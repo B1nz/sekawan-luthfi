@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('driver_id');
-            $table->integer('fuel_usage');
-            $table->integer('range');
+            $table->integer('fuel_usage')->nullable();
+            $table->integer('range')->nullable();
             $table->dateTime('start');
             $table->dateTime('end');
             $table->timestamps();
