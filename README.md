@@ -1,7 +1,13 @@
 # Luthfi Goldiansyah Kusumajadi - Sekawan Media Practical Test
  Pactical Test for Sekawan Media 2024
 
+## Framework Info
+Laravel : 11.7.0
+PHP : 8.3.7
+MySQL : 10.4.17-MariaDB
+
 ## Username dan Password
+
 ### Admin
 1. admin1: adminadmin
 2. admin2: adminadmin
