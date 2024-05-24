@@ -16,6 +16,7 @@ class VehicleHistory extends Model
         'vehicle_id',
         'user_id',
         'driver_id',
+        'order_id',
         'fuel_usage',
         'range',
         'start',
@@ -35,6 +36,6 @@ class VehicleHistory extends Model
     }
 
     public function order() {
-        return $this->belongsTo(Order::class, 'driver_id');
+        return $this->belongsTo(Order::class, 'order_id');
     }
 }

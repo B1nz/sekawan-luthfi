@@ -1,14 +1,17 @@
 <?php
 
-use App\Http\Controllers\ActivityController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\DriverController;
-use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\DriverController;
+use App\Http\Controllers\ExportController;
+use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\QuarryController;
 use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\OrderRequestController;
+use App\Http\Controllers\VehicleHistoryController;
 
 Auth::routes();
 
@@ -21,6 +24,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/order/add', 'add')->name('order.add');
         Route::post('/order/delete/{id}', 'delete')->name('order.delete');
     });
+
+    // routes/web.php
+    Route::post('/export/excel', [ExportController::class, 'exportToExcel'])->name('export.excel');
 });
 
 Route::middleware('check.role:1')->group(function () {
@@ -66,14 +72,21 @@ Route::middleware('check.role:1')->group(function () {
         Route::post('/office/delete/{id}', 'delete')->name('office.delete');
     });
 
+    Route::get('/vehicle/history/{id}', [VehicleHistoryController::class, 'getVehicleHistory'])->name('vehicle.history');
+
     Route::get('/activity', [ActivityController::class, 'index'])->name('activity');
 
 });
 
-Route::middleware('check.role:2')->group(function () {
-    //
+Route::middleware(['check.multiple.role:1,2'])->group(function () {
+    // Order Request Route
+    Route::controller(OrderRequestController::class)->group(function () {
+        Route::get('/orreq', 'index')->name('orreq');
+        Route::post('/orreq/approve/{id}', 'approve')->name('orreq.approve');
+        Route::post('/orreq/reject/{id}', 'reject')->name('orreq.reject');
+    });
 });
 
-Route::middleware('check.role:3')->group(function () {
-    //
+Route::middleware('check.role:2')->group(function () {
+    Route::post('/order/done/{id}', [OrderController::class, 'done'])->name('order.done');
 });

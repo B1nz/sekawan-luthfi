@@ -11,7 +11,13 @@
                     <h1 class="h3 mb-2 text-gray-800">Order Data</h1>
                 </div>
                 <div class="col text-right">
-                    <a href="#" class="btn btn-success btn-icon-split" id="add-new-data-btn">
+                    <a class="btn btn-info btn-icon-split" id="excel-export-btn">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-file-excel"></i>
+                        </span>
+                        <span class="text">Export to Excel</span>
+                    </a>
+                    <a class="btn btn-success btn-icon-split" id="add-new-data-btn">
                         <span class="icon text-white-50">
                             <i class="fas fa-plus"></i>
                         </span>
@@ -54,7 +60,7 @@
                                 @endif
                                 @if ($order->status == 'Requested')
                                     <td>
-                                        <a class="btn btn-light btn-icon-split">
+                                        <a class="btn btn-warning btn-icon-split">
                                             <span class="text">Requested</span>
                                         </a>
                                     </td>
@@ -80,17 +86,32 @@
                                         </a>
                                     </td>
                                 @endif
+                                @if ($order->status == 'Done')
+                                    <td>
+                                        <a class="btn btn-primary btn-icon-split">
+                                            <span class="text">Done</span>
+                                        </a>
+                                    </td>
+                                @endif
                                 <td>{{ \Carbon\Carbon::parse($order->start)->format('Y-m-d') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($order->end)->format('Y-m-d') }}</td>
                                 <td>{{ $order->created_at }}</td>
                                 <td class="text-right">
-                                    @if ($order->status == 'Requested' || $order->status == 'On Process')
-                                        <a class="btn btn-danger btn-icon-split delete-btn"
-                                            data-id="{{ $order->id }}">
+                                    @if (($order->status == 'Requested' || $order->status == 'On Process') && Auth::user()->role_id == '3')
+                                        <a class="btn btn-danger btn-icon-split delete-btn" data-id="{{ $order->id }}">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-xmark"></i>
                                             </span>
                                             <span class="text">Cancel Order</span>
+                                        </a>
+                                    @endif
+
+                                    @if (Auth::user()->role_id == '2' && $order->status == 'Approved')
+                                        <a class="btn btn-info btn-icon-split info-btn" data-id="{{ $order->id }}">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-check-double"></i>
+                                            </span>
+                                            <span class="text">Mark as Done</span>
                                         </a>
                                     @endif
                                 </td>
@@ -190,7 +211,6 @@
             }
         });
 
-
         // Cancel data modal
         document.querySelectorAll('.delete-btn').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -229,6 +249,115 @@
                             });
                     }
                 });
+            });
+        });
+
+        // Done data modal
+        document.querySelectorAll('.info-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const orderId = this.getAttribute('data-id');
+
+                Swal.fire({
+                    title: 'Mark Order as Done',
+                    html:
+                        `<input type="text" id="fuel_usage" class="swal2-input" placeholder="Fuel Usage (L)" min="0" inputmode="numeric" pattern="[0-9]*"><br>` +
+                        `<input type="text" id="distance" class="swal2-input" placeholder="Distance (km)" min="0" inputmode="numeric" pattern="[0-9]*">`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Mark as Done',
+                    cancelButtonText: 'Cancel',
+                    reverseButtons: true,
+                    icon: 'info'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const fuelUsage = document.getElementById('fuel_usage').value;
+                        const distance = document.getElementById('distance').value;
+
+                        console.log(orderId);
+                        fetch(`/order/done/${orderId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ fuel_usage: fuelUsage, distance: distance })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.error) {
+                                Swal.fire('Error', data.error, 'error');
+                            } else {
+                                Swal.fire({
+                                    title: "Success!",
+                                    text: "Order marked as done successfully",
+                                    icon: "success"
+                                }).then(() => {
+                                    window.location.reload();
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire('Error', 'An unexpected error occurred.', 'error');
+                        });
+                    }
+                });
+            });
+        });
+
+        // Excel export modal
+        document.getElementById('excel-export-btn').addEventListener('click', function() {
+            Swal.fire({
+                title: 'Export Data to Excel',
+                html:
+                    `<p>Kosongkan input jika ingin export seluruh data</p>` +
+                    `<input type="date" id="start-date" class="swal2-input" placeholder="Start Date">` +
+                    `<input type="date" id="end-date" class="swal2-input" placeholder="End Date">`,
+                showCancelButton: true,
+                confirmButtonText: 'Export',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true,
+                icon: 'info'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const startDate = document.getElementById('start-date').value || null;
+                    const endDate = document.getElementById('end-date').value || null;
+
+                    fetch("/export/excel", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify({ start_date: startDate, end_date: endDate })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.blob(); // Convert response to blob
+                        } else {
+                            throw new Error('Failed to export data');
+                        }
+                    })
+                    .then(blob => {
+                        // Create a URL for the blob
+                        const url = window.URL.createObjectURL(blob);
+                        // Create a temporary link element
+                        const a = document.createElement('a');
+                        // Set the href attribute of the link to the URL of the blob
+                        a.href = url;
+                        // Set the download attribute to specify the filename
+                        a.download = 'orders.xlsx';
+                        // Append the link to the document body
+                        document.body.appendChild(a);
+                        // Click the link programmatically to trigger the download
+                        a.click();
+                        // Remove the link from the document body
+                        document.body.removeChild(a);
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        Swal.fire('Error', 'An unexpected error occurred while exporting data.', 'error');
+                    });
+                }
             });
         });
 

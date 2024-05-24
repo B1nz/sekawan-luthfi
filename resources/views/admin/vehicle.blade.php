@@ -260,43 +260,65 @@
 
         //Vehicle History
         document.querySelectorAll('.history-btn').forEach(btn => {
-        btn.addEventListener('click', async function() {
-            const vehicleId = this.getAttribute('data-id');
+            btn.addEventListener('click', async function() {
+                const vehicleId = this.getAttribute('data-id');
 
-            try {
-                const response = await fetch(`/vehicle/history/${vehicleId}`);
-                const historyData = await response.json();
+                try {
+                    const response = await fetch(`/vehicle/history/${vehicleId}`);
+                    const vehicleHistories = await response.json();
 
-                if (historyData.length > 0) {
-                    let historyTable = '<table class="table table-bordered"><thead><tr><th>Date</th><th>Description</th></tr></thead><tbody>';
-                    historyData.forEach(history => {
-                        historyTable += `<tr><td>${history.date}</td><td>${history.description}</td></tr>`;
-                    });
-                    historyTable += '</tbody></table>';
+                    if (vehicleHistories.length > 0) {
+                        let totalFuel = 0;
+                        let totalRange = 0;
 
-                    Swal.fire({
-                        title: 'Vehicle History',
-                        html: historyTable,
-                        width: '600px',
-                        showCloseButton: true,
-                        showCancelButton: true,
-                        focusConfirm: false,
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Vehicle History',
-                        text: 'No history available for this vehicle.',
-                        icon: 'info',
-                        showCloseButton: true,
-                        showCancelButton: true,
-                        focusConfirm: false,
-                    });
+                        let historyTable = '<table class="table table-bordered"><thead><tr><th>User</th><th>Driver</th><th>Order ID</th><th>Fuel Usage</th><th>Range</th><th>Start</th><th>End</th></tr></thead><tbody>';
+                        vehicleHistories.forEach(history => {
+                            totalFuel += history.fuel_usage;
+                            totalRange += history.range;
+
+                            const startDate = new Date(history.start).toLocaleDateString();
+                            const endDate = new Date(history.end).toLocaleDateString();
+
+
+                            historyTable += `<tr>
+                                                <td>${history.user ? history.user.name : 'N/A'}</td>
+                                                <td>${history.driver ? history.driver.name : 'N/A'}</td>
+                                                <td>${history.order_id}</td>
+                                                <td>${history.fuel_usage}</td>
+                                                <td>${history.range}</td>
+                                                <td>${startDate}</td>
+                                                <td>${endDate}</td>
+                                            </tr>`;
+                        });
+                        historyTable += '</tbody></table>';
+
+                        // Display total fuel and total range
+                        const totalHtml = `<p>Total Fuel: ${totalFuel} L</p><p>Total Range: ${totalRange} KM</p>`;
+
+                        Swal.fire({
+                            title: 'Vehicle History',
+                            html: totalHtml + historyTable,
+                            width: '80%',
+                            showCloseButton: true,
+                            showCancelButton: true,
+                            focusConfirm: false,
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Vehicle History',
+                            text: 'No history available for this vehicle.',
+                            icon: 'info',
+                            showCloseButton: true,
+                            showCancelButton: true,
+                            focusConfirm: false,
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error fetching vehicle history:', error);
+                    Swal.fire('Error', 'An error occurred while fetching vehicle history.', 'error');
                 }
-            } catch (error) {
-                console.error('Error fetching vehicle history:', error);
-                Swal.fire('Error', 'An error occurred while fetching vehicle history.', 'error');
-            }
+            });
         });
-    });
+
     </script>
 @endsection
