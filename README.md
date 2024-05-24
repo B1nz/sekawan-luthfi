@@ -9,23 +9,8 @@
 ## Username dan Password
 
 ### Admin
-1. admin1: <span id="admin1Password">*********</span> <button onclick="togglePassword('admin1')">Show/Hide</button>
-2. admin2: <span id="admin2Password">*********</span> <button onclick="togglePassword('admin2')">Show/Hide</button>
-
-<script>
-function togglePassword(admin) {
-    const passwordElement = document.getElementById(admin + 'Password');
-    const password = passwordElement.innerText;
-
-    if (passwordElement.dataset.visible === 'false') {
-        passwordElement.innerText = password;
-        passwordElement.dataset.visible = 'true';
-    } else {
-        passwordElement.innerText = '*'.repeat(password.length);
-        passwordElement.dataset.visible = 'false';
-    }
-}
-</script>
+1. admin1: adminadmin
+2. admin2: adminadmin
 
 ### Admin Pool
 1. adminpool1: adminpool
