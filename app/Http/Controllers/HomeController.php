@@ -63,6 +63,8 @@ class HomeController extends Controller
             ];
         });
 
+        $user_role = Auth::user()->role_id;
+
         $data = compact(
             'orders',
             'order_request',
@@ -70,6 +72,7 @@ class HomeController extends Controller
             'vehicle_histories',
             'vehicles',
             'monthlyUsage',
+            'user_role',
         );
 
         return view('home', $data);
