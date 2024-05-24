@@ -55,10 +55,10 @@
 10. Selanjutnya akan ada Order Request, sama seperti Admin Poll hanya bedanya pada pilihan di modal terdapat pilihan Approve Final dan list nama admin manager lainnya. Jika anda memilih admin manager lainnya maka data akan dialihkan ke admin manager tersebut. Jika anda memilih Final Approve maka data akan berubah menjadi Approved dan data akan hilang dari tabel.
 11. Yang terakhir adalah halaman Vehicle Orders dimana halaman ini memiliki tampilan dan fitur yang sama dengan Admin Pool, yang membedakan hanyalah tidak ada tombol dan fitur untuk "Mark as Done".
 
+## Diagram
+![Diagram](/public/img/diagram.png)
+
 ## Notes Tambahan
 - Link Activity Diagram : https://drive.google.com/drive/folders/1s7zzncNFhkqDUzAfTPOG6bcPSKWawTz2?usp=sharing
 - Link Database MySSQL : https://drive.google.com/file/d/1AVaWvaPw_VLxKMYg0mKU76gqqx-MtH2X/view?usp=sharing
 - (info) Database name : sekawan-luthfi
-
-## Diagram
-![Diagram](/public/img/diagram.png)
