@@ -39,7 +39,7 @@
 6. Selanjutnya ada menu Vehicle Orders sama seperti pada Admin, namun yang membedakan hanyalah tidak adanya tombol cancel melainkan tombol "Mark as Done"
 7. Mark as Done ini merupakan salah satu tugas Admin Pool untuk mengkonfirmasi bahwa pesanan telah selesai dan kendaraan siap untuk dikembalikan ke pool
 8. Pada saat menekan tombol ini maka akan muncul modal konfirmasi dan Admin Pool diharapkan untuk mendata dan memasukkan data jumlah BBM yang dikonsumsi dan jarak yang di tempuh. Lalu setelah mengkonfirmasi maka data akan terupdate dan status pesanan akan berubah menjadi Done.
-10. (notes) untuk mempermudah kalkulasi BBM dapat menggunakan system "full to full", dan harap catat odometer kendaraan sebelum dan sesudah digunakan
+- (notes) untuk mempermudah kalkulasi BBM dapat menggunakan system "full to full", dan harap catat odometer kendaraan sebelum dan sesudah digunakan
 
 ### Admin Manager
 1. adminmanager1: adminmanager
