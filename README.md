@@ -59,3 +59,6 @@
 - Link Activity Diagram : https://drive.google.com/drive/folders/1s7zzncNFhkqDUzAfTPOG6bcPSKWawTz2?usp=sharing
 - Link Database MySSQL : https://drive.google.com/file/d/1AVaWvaPw_VLxKMYg0mKU76gqqx-MtH2X/view?usp=sharing
 - (info) Database name : sekawan-luthfi
+
+## Diagram
+![Diagram](/img/diagram.png)
