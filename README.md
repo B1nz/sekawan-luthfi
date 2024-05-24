@@ -61,4 +61,4 @@
 - (info) Database name : sekawan-luthfi
 
 ## Diagram
-![Diagram](/img/diagram.png)
+![Diagram](/public/img/diagram.png)
