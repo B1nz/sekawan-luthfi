@@ -13,12 +13,12 @@
 2. admin2: adminadmin
 
 ### Admin Pool
-1. adminpool1: adminpool
-2. adminpool2: adminpool
+1. pooladmin1: pooladmin
+2. pooladmin2: pooladmin
 
 ### Admin Manager
-1. adminmanager1: adminmanager
-2. adminmanager2: adminmanager
+1. manageradmin1: manageradmin
+2. manageradmin2: manageradmin
 
 ## Panduan Penggunaan
 ### Admin
